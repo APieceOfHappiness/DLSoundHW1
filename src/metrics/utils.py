@@ -34,7 +34,6 @@ def levenshtein_distance(target_text, predict_text) -> float:
 
 
 def calc_cer(target_text, predicted_text) -> float:
-    print(predicted_text)
 
     target_chars = list(target_text)
     predicted_chars = list(predicted_text)
