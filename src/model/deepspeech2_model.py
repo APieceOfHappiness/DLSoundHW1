@@ -4,7 +4,7 @@ from torch.nn import Sequential
 from hydra.utils import instantiate
 
 
-class SimpleRNN(nn.Module):
+class DeepSpeech2(nn.Module):
     """
     Simple MLP
     """
@@ -17,6 +17,11 @@ class SimpleRNN(nn.Module):
             fc_hidden (int): number of hidden features.
         """
         super().__init__()
+
+        self.conv_layers = nn.Sequential(
+            nn.Conv2d(in_channels=1, out_channels=3, kernel_size=3, padding=1),
+            nn.Conv2d(in_channels=3, out_channels=1, kernel_size=3, padding=1),
+        )
 
         self.rnn = eval(rnn_type)(
             input_size=n_feats,
@@ -46,6 +51,11 @@ class SimpleRNN(nn.Module):
                 transformed lengths.
         """
         
+        print(spectrogram.unsqueeze(1).shape)
+        output = self.conv_layers(spectrogram.unsqueeze(1))
+        output = output.squeeze(1)
+        print(output.shape)
+
         output = nn.utils.rnn.pack_padded_sequence(spectrogram.transpose(1, 2), spectrogram_length.cpu(), batch_first=True, enforce_sorted=False)
         output, _ = self.rnn(output)
         

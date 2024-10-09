@@ -1,4 +1,4 @@
-_target_: src.model.SimpleRNN
+_target_: src.model.DeepSpeech2
 rnn_type: torch.nn.GRU # supported: nn.GRU/nn.RNN/nn.LSTM
 n_feats: 128
 fc_hidden: 2560

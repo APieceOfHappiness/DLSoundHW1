@@ -55,8 +55,8 @@ class Trainer(BaseTrainer):
             batch["loss"].backward()  # sum of all losses is always called loss
             self._clip_grad_norm()
             self.optimizer.step()
-            if self.lr_scheduler is not None:
-                self.lr_scheduler.step()
+            # if self.lr_scheduler is not None: # WAS MOVED TO BASE TRAINER
+            #     self.lr_scheduler.step()
 
         # update metrics for each loss (in case of multiple losses)
         for loss_name in self.config.writer.loss_names:

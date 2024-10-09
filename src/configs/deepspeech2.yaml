@@ -1,5 +1,5 @@
 defaults:
-  - model: simple_rnn_model
+  - model: deepspeech2
   - writer: wandb
   - metrics: example
   - datasets: example
@@ -20,7 +20,6 @@ text_encoder:
 trainer:
   log_step: 50
   n_epochs: 50
-  # epoch_len: 200
   device_tensors: ["spectrogram", "text_encoded"] # which tensors should be on device (ex. GPU)
   resume_from: null # null or path to the checkpoint dir with *.pth and config.yaml
   device: auto # device name or "auto"

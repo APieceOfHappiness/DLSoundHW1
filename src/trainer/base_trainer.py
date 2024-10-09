@@ -168,9 +168,10 @@ class BaseTrainer:
         not_improved_count = 0
         for epoch in range(self.start_epoch, self.epochs + 1):
             self._last_epoch = epoch
-            print('start')
             result = self._train_epoch(epoch)
-            print('finish')
+
+            if self.is_train and self.lr_scheduler is not None: 
+                self.lr_scheduler.step()
 
             # save logged information into logs dict
             logs = {"epoch": epoch}
@@ -225,7 +226,6 @@ class BaseTrainer:
                     raise e
 
             self.train_metrics.update("grad_norm", self._get_grad_norm())
-            print(self.train_metrics.avg('loss'), self.train_metrics.avg('grad_norm'))
 
             # log current results
             if batch_idx % self.log_step == 0:
