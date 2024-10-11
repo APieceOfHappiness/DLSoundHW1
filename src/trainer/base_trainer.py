@@ -170,7 +170,7 @@ class BaseTrainer:
             self._last_epoch = epoch
             result = self._train_epoch(epoch)
 
-            if self.is_train and self.lr_scheduler is not None: 
+            if self.lr_scheduler is not None: 
                 self.lr_scheduler.step()
 
             # save logged information into logs dict

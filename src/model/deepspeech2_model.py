@@ -9,7 +9,7 @@ class DeepSpeech2(nn.Module):
     Simple MLP
     """
 
-    def __init__(self, rnn_type, dropout, n_feats, n_tokens, num_layers=1, fc_hidden=512):
+    def __init__(self, rnn_type, dropout, n_feats, n_tokens, num_layers=1, fc_hidden=512, bidirectional=True):
         """
         Args:
             n_feats (int): number of input features.
@@ -17,20 +17,23 @@ class DeepSpeech2(nn.Module):
             fc_hidden (int): number of hidden features.
         """
         super().__init__()
-
+        
         self.conv_layers = nn.Sequential(
-            nn.Conv2d(in_channels=1, out_channels=3, kernel_size=3, padding=1),
-            nn.Conv2d(in_channels=3, out_channels=1, kernel_size=3, padding=1),
+            nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, padding=1),
+            nn.BatchNorm2d(32),
+            nn.Conv2d(in_channels=32, out_channels=32, kernel_size=3, padding=1),
+            nn.BatchNorm2d(32),
+            nn.Conv2d(in_channels=32, out_channels=1, kernel_size=3, padding=1),
         )
 
         self.rnn = eval(rnn_type)(
             input_size=n_feats,
-            hidden_size=fc_hidden,
+            hidden_size=fc_hidden // 2 if bidirectional else fc_hidden,
             num_layers=num_layers,
             bias=True,
             batch_first=True,
             dropout=dropout,
-            bidirectional=False, # TODO: 
+            bidirectional=True, # TODO: 
         )
 
         self.rnn_type = rnn_type

@@ -1,7 +1,7 @@
 _target_: src.model.DeepSpeech2
 rnn_type: torch.nn.GRU # supported: nn.GRU/nn.RNN/nn.LSTM
 n_feats: 128
-fc_hidden: 2560
+fc_hidden: 512
 dropout: 0.1
 num_layers: 3
-
+bidirectional: True
