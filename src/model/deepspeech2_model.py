@@ -59,9 +59,8 @@ class DeepSpeech2(nn.Module):
         output = output.squeeze(1)
         print(output.shape)
 
-        output = nn.utils.rnn.pack_padded_sequence(spectrogram.transpose(1, 2), spectrogram_length.cpu(), batch_first=True, enforce_sorted=False)
+        output = nn.utils.rnn.pack_padded_sequence(output.transpose(1, 2), spectrogram_length.cpu(), batch_first=True, enforce_sorted=False)
         output, _ = self.rnn(output)
-        
         output, _ = nn.utils.rnn.pad_packed_sequence(output, total_length=spectrogram.shape[2], batch_first=True)
 
         output = self.ln_linear(output)

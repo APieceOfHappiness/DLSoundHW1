@@ -31,24 +31,31 @@ class CTCTextEncoder:
 
         if tokenizer_type == 'character_wise':
             self.vocab = [self.EMPTY_TOK] + list(self.alphabet)
-            self.ind2token = dict(enumerate(self.vocab))
-            self.token2ind = {v: k for k, v in self.ind2char.items()}
+            self.ind2char = dict(enumerate(self.vocab))
+            self.char2ind = {v: k for k, v in self.ind2char.items()}
 
         # REDO:
         elif tokenizer_type == 'bpe':
+            print('begin')
+            from pathlib import Path
+            current_directory = Path.cwd()
+            print(current_directory)
+            
             PATH = './data/datasets/librispeech/train-clean-100_index.json'
             TEMP_CORPUS_PATH = './src/text_encoder/bpe/temp_corpus.txt'
             MODEL_PATH = './src/text_encoder/bpe/'
-            special_tokens = ["<unk>", "EMPTY_TOKEN"]
+            special_tokens = [""]
 
             if force:
                 shutil.rmtree(MODEL_PATH)
                 os.mkdir(MODEL_PATH)
 
+            print('first')
             with open(PATH) as f:
                 data = json.load(f)
                 corpus = '\n'.join([el['text'] for el in data])
-                
+
+            print('second')
             with open(TEMP_CORPUS_PATH, 'w+') as f:
                 f.write(corpus)
 
@@ -64,6 +71,7 @@ class CTCTextEncoder:
             ) 
 
             self.vocab = self.tokenizer.get_vocab()
+            print('end')
             
     def __len__(self):
         return len(self.vocab)
