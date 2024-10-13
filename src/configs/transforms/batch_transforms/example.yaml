@@ -1,14 +1,42 @@
 train:
-  data_object: # name of the tensor on which we apply transform
+  audio: # name of the tensor on which we apply transform
     _target_: torch.nn.Sequential # to apply several transforms sequentially
     _args_:
-      - _target_: src.transforms.Normalize1D
-        mean: 0.5
-        std: 0.5
-inference:
-  data_object: # name of the tensor on which we apply transform
-    _target_: torch.nn.Sequential # to apply several transforms sequentially
+      # - _target_: src.transforms.Normalize1D
+      #   mean: 0.5
+      #   std: 0.5
+      - _target_: src.transforms.wav_augs.PitchShift
+        min_transpose_semitones: -5
+        max_transpose_semitones: 5
+        p: 0.5
+        sample_rate: 16000
+      - _target_: src.transforms.wav_augs.Gain
+        min_gain_in_db: -5.0
+        max_gain_in_db: 5.0
+        p: 0.5
+        sample_rate: 16000
+      - _target_: src.transforms.wav_augs.ColoredNoise
+        min_snr_in_db: 1
+        max_snr_in_db: 5
+        p: 0.5
+        sample_rate: 16000
+      # - _target_: src.transforms.spec_augs.TimeStretch
+      #   min_value: 0.5
+      #   max_value: 1.5
+      #   p: 1
+      #   n_freq: 128
+  spectrogram:
+    _target_: torch.nn.Sequential
     _args_:
-      - _target_: src.transforms.Normalize1D
-        mean: 0.5
-        std: 0.5
+      - _target_: src.transforms.spec_augs.FrequencyMasking
+        freq_mask_param: 20
+        p: 0.5
+
+
+inference: null
+  # data_object: # name of the tensor on which we apply transform
+  #   _target_: torch.nn.Sequential # to apply several transforms sequentially
+  #   _args_:
+  #     - _target_: src.transforms.Normalize1D
+  #       mean: 0.5
+  #       std: 0.5

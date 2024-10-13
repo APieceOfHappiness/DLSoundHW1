@@ -33,7 +33,9 @@ class Trainer(BaseTrainer):
                 model outputs, and losses.
         """
         batch = self.move_batch_to_device(batch)
+        # print('-->', batch)
         batch = self.transform_batch(batch)  # transform batch on device -- faster
+        # self.log_spectrogram
 
         metric_funcs = self.metrics["inference"]
         if self.is_train:
@@ -84,6 +86,9 @@ class Trainer(BaseTrainer):
         # logging scheme might be different for different partitions
         if mode == "train":  # the method is called only every self.log_step steps
             self.log_spectrogram(**batch)
+            # print(batch_idx)
+            if batch_idx <= 5:
+                self.log_audio(**batch)
         else:
             # Log Stuff
             self.log_spectrogram(**batch)
@@ -93,6 +98,11 @@ class Trainer(BaseTrainer):
         spectrogram_for_plot = spectrogram[0].detach().cpu()
         image = plot_spectrogram(spectrogram_for_plot)
         self.writer.add_image("spectrogram", image)
+
+    def log_audio(self, audio, **batch):
+        for i in range(min(5, audio.shape[0])):
+            audio_for_log = audio[i].detach().cpu()
+            self.writer.add_audio(f'audio_{i}', audio_for_log, sample_rate=16000)
 
     def log_predictions(
         self, text, log_probs, log_probs_length, audio_path, examples_to_log=10, **batch

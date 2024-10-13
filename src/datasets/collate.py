@@ -33,5 +33,6 @@ def collate_fn(dataset_items: list[dict]):
                 result_batch[key] = result_batch[key].transpose(1, 2)
         else:
             result_batch[key] = result_batch_temp[key]
+
     return result_batch
 

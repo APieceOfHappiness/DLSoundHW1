@@ -19,11 +19,16 @@ class DeepSpeech2(nn.Module):
         super().__init__()
         
         self.conv_layers = nn.Sequential(
-            nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, padding=1),
-            nn.BatchNorm2d(32),
-            nn.Conv2d(in_channels=32, out_channels=32, kernel_size=3, padding=1),
-            nn.BatchNorm2d(32),
-            nn.Conv2d(in_channels=32, out_channels=1, kernel_size=3, padding=1),
+            nn.Conv2d(in_channels=1, out_channels=4, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4),
+            nn.Tanh(),
+            nn.Conv2d(in_channels=4, out_channels=8, kernel_size=3, padding=1),
+            nn.BatchNorm2d(8),
+            nn.Tanh(),
+            nn.Conv2d(in_channels=8, out_channels=4, kernel_size=3, padding=1),
+            nn.BatchNorm2d(4),
+            nn.Tanh(),
+            nn.Conv2d(in_channels=4, out_channels=1, kernel_size=3, padding=1)
         )
 
         self.rnn = eval(rnn_type)(
@@ -33,7 +38,7 @@ class DeepSpeech2(nn.Module):
             bias=True,
             batch_first=True,
             dropout=dropout,
-            bidirectional=True, # TODO: 
+            bidirectional=True 
         )
 
         self.rnn_type = rnn_type
