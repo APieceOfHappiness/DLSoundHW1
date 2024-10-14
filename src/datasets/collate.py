@@ -27,6 +27,7 @@ def collate_fn(dataset_items: list[dict]):
     for key, value in result_batch_temp.items():
         if type(value[0]) is not str:
             result_batch[key + '_length'] = torch.tensor([val.shape[0] for val in result_batch_temp[key]])
+
             result_batch[key] = pad_sequence(value, batch_first=True, padding_value=0)
 
             if key == 'spectrogram':

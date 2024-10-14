@@ -4,6 +4,8 @@ torchaudio==2.2.0
 soundfile
 numpy==1.26.4
 torch_audiomentations
+tokenizers
+sentencepiece
 tqdm
 matplotlib
 pandas
@@ -11,6 +13,7 @@ wandb
 comet_ml
 hydra-core
 torchaudio
+
 
 wget
 black
