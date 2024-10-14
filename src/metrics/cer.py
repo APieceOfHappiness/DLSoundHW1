@@ -46,7 +46,7 @@ class BeamCERMetric(BaseMetric):
         for log_prob_vec, length, target_text in zip(log_probs, lengths, text):
             target_text = self.text_encoder.normalize_text(target_text)
             
-            pred_inds = self.text_encoder.ctc_beam_search_ind(log_prob_vec[:length].exp().detach().numpy(), 3)[-1][0]
+            pred_inds = self.text_encoder.ctc_beam_search_ind(log_prob_vec[:length].exp().detach().cpu().numpy(), 3)[-1][0]
             pred_text = self.text_encoder.ind2text(list(pred_inds))
             cers.append(calc_cer(target_text, pred_text))
         return sum(cers) / len(cers)

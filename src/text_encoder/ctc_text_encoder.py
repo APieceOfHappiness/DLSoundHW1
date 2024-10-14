@@ -178,7 +178,7 @@ class CTCTextEncoder:
         return new_dp
 
     def truncate_paths(self, dp, beam_size):
-        return dict(sorted(list(dp.items()), key=lambda x: -x[1])[:beam_size])
+        return dict(sorted(list(dp.items()), key=lambda x: x[1])[-beam_size:])
 
     def ctc_beam_search_ind(self, probs, beam_size):
         dp = {
@@ -187,5 +187,5 @@ class CTCTextEncoder:
         for prob in probs:
             dp = self.expand_and_merge_path(dp, prob, self.ind2token)
             dp = self.truncate_paths(dp, beam_size)
-        dp = [(prefix, proba) for (prefix, _), proba in sorted(dp.items(), key=lambda x: -x[1])][-beam_size:]
+        dp = [(prefix, proba) for (prefix, _), proba in sorted(dp.items(), key=lambda x: x[1])][-beam_size:]
         return dp
