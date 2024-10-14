@@ -6,7 +6,7 @@ defaults:
   - transforms: example
   - _self_
 inferencer:
-  device_tensors: ["data_object", "labels"] # which tensors should be on device (ex. GPU)
+  device_tensors: ["spectrogram", "labels"] # which tensors should be on device (ex. GPU)
   device: auto # device name or "auto"
   save_path: "example" # any name here, can be a dataset name
   seed: 1
@@ -16,6 +16,7 @@ text_encoder:
   tokenizer_type: bpe
   vocab_size: 10
   force: False
+  path: null
 
   # from_pretrained: "saved/model_best.pth" # path to the pretrained model
 # saved_cur/testing/checkpoint-epoch2.pth

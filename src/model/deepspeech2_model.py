@@ -19,18 +19,12 @@ class DeepSpeech2(nn.Module):
         super().__init__()
         
         self.conv_layers = nn.Sequential(
-            nn.Conv2d(in_channels=1, out_channels=4, kernel_size=3, padding=1),
-            nn.BatchNorm2d(4),
-            nn.Tanh(),
-            nn.Conv2d(in_channels=4, out_channels=8, kernel_size=3, padding=1),
-            nn.BatchNorm2d(8),
-            nn.Tanh(),
-            nn.Conv2d(in_channels=8, out_channels=4, kernel_size=3, padding=1),
-            nn.BatchNorm2d(4),
-            nn.Tanh(),
-            nn.Conv2d(in_channels=4, out_channels=1, kernel_size=3, padding=1)
+            nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, padding=1),
+            nn.BatchNorm2d(32),
+            nn.Conv2d(in_channels=32, out_channels=32, kernel_size=3, padding=1),
+            nn.BatchNorm2d(32),
+            nn.Conv2d(in_channels=32, out_channels=1, kernel_size=3, padding=1),
         )
-
         self.rnn = eval(rnn_type)(
             input_size=n_feats,
             hidden_size=fc_hidden // 2 if bidirectional else fc_hidden,
@@ -64,7 +58,7 @@ class DeepSpeech2(nn.Module):
         output = output.squeeze(1)
         print(output.shape)
 
-        output = nn.utils.rnn.pack_padded_sequence(output.transpose(1, 2), spectrogram_length.cpu(), batch_first=True, enforce_sorted=False)
+        output = nn.utils.rnn.pack_padded_sequence(spectrogram.transpose(1, 2), spectrogram_length.cpu(), batch_first=True, enforce_sorted=False)
         output, _ = self.rnn(output)
         output, _ = nn.utils.rnn.pad_packed_sequence(output, total_length=spectrogram.shape[2], batch_first=True)
 
