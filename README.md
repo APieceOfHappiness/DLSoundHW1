@@ -4,6 +4,8 @@
 Для запуска данной модели необходимо
 
 ```bash
+pip install -r requirements.txt
+
 python inference.py datasets.inference.audio_dir=<audio_dir> datasets.inference.transcription_dir=<text_dir> inferencer.from_pretrained=<checkpoint> dataloader.batch_size=32 model.num_layers=5 text_encoder.tokenizer_type='character_wise'
 ```
 
